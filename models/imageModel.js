@@ -1,18 +1,20 @@
 // image model here
-const express = require('express')
- const mongoose = require('mongoose')
+import mongoose from "mongoose"
 
- const {Schema} = mongoose
 
- const imageModel = new Schema({
-    image:{
-        type:'String',
-        require:true
-    },
-    caption:{
-        type:'String',
-        require:true
-    }
- })
+const imageSchema = new mongoose.Schema({
+    images: [
+        {
+            public_id: {
+                type: String,
+                required: true,
+            },
+            url: {
+                type: String,
+                required: true,
+            },
+        },
+    ],
+})
 
-exports.imageCollection = mongoose.model('imageUpload',imageModel) 
+export const Images = mongoose.model("Images", imageSchema);
