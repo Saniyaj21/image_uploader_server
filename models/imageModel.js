@@ -12,6 +12,12 @@ const imageSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    caption:{
+        type:String,
+        required:false,
+        max:500
+
+    },
     createdAt: {
         type: Date,
         default: Date.now,
