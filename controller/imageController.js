@@ -13,7 +13,6 @@ export const postImage = async (req, res) => {
             width: 150,
             crop: "scale",
         });
-        console.log(req.body.imageData, req.body.caption)
 
         const image = await Images.create({
 
