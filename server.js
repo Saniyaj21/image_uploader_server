@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 
 // routes import
 import ImageRouter from './routes/imageRoute.js';
-
+import Auth from './routes/auth.js'
 const server = express()
 
 // database connection 
@@ -41,8 +41,8 @@ server.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 
 // routes
+server.use('/auth', Auth)
 server.use('/api/images', ImageRouter)
-
 
 server.listen(process.env.PORT, () => {
   console.log(`server is running at ${process.env.PORT}`)
