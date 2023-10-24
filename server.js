@@ -5,6 +5,8 @@ import cors from 'cors'
 import { v2 as cloudinary } from 'cloudinary';
 import fileUpload from 'express-fileupload';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+
 
 // routes import
 import ImageRouter from './routes/imageRoute.js';
@@ -38,7 +40,8 @@ server.use(bodyParser.json({ limit: '50mb' }));
 // Increase the request size limit for URL-encoded data
 server.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-
+//use cookies parser ...
+server.use(cookieParser());
 
 // routes
 server.use('/auth', Auth)
