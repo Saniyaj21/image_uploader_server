@@ -21,7 +21,7 @@ export const postImage = async (req, res) => {
             caption: req.body.caption
 
         });
-        res.status(200).json({ success: true, image })
+        res.status(200).json({ success: true,message:'Image uploaded successfully', image })
     } catch (error) {
         console.log(error)
         res.status(400).json({
