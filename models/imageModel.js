@@ -12,11 +12,17 @@ const imageSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    caption:{
-        type:String,
-        required:false,
-        max:500
+    caption: {
+        type: String,
+        required: false,
+        max: 1000
 
+    },
+
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true,
     },
     createdAt: {
         type: Date,

@@ -14,16 +14,18 @@ export const postImage = async (req, res) => {
             crop: "scale",
         });
 
+
         const image = await Images.create({
 
             public_id: myCloud.public_id,
             url: myCloud.secure_url,
-            caption: req.body.caption
+            caption: req.body.caption,
+            user: req.user
 
         });
-        res.status(200).json({ success: true,message:'Image uploaded successfully', image })
+        res.status(200).json({ success: true, message: 'Image uploaded successfully', image })
     } catch (error) {
-        console.log(error)
+
         res.status(400).json({
             success: false,
             message: "Can't post a image"
@@ -34,12 +36,12 @@ export const postImage = async (req, res) => {
 // get all images 
 export const getAllImages = async (req, res) => {
     try {
-        const allImages = await Images.find();
+        const allImages = await Images.find({ user: req.user });
         res.status(200).json({ success: true, allImages })
     } catch (error) {
         res.status(400).json({
             success: false,
-            message: "Can't get images"
+            message: "No Images Found!"
         })
     }
 }
@@ -57,7 +59,7 @@ export const getImamgById = async (req, res) => {
     catch (err) {
         res.status(400).json({
             success: false,
-            message: 'Image not find',
+            message: "No Images Found!",
         })
     }
 
@@ -75,7 +77,7 @@ export const deleteImage = async (req, res) => {
             if (error) {
                 console.error(error);
             } else {
-                console.log('Image deleted successfully');
+                console.log("Ddeleted successfully");
             }
 
         });
