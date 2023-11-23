@@ -2,14 +2,14 @@
 
 import express from 'express';
 import { getAllImages, postImage , getImamgById, deleteImage } from '../controller/imageController.js';
-import { isImageAuth } from '../middlewares/imageAuth.js';
+import { isAuthenticate } from '../middlewares/authenticate.js';
 
 
 const router = express.Router();
 
-router.post('/',isImageAuth, postImage)
-router.get('/',isImageAuth, getAllImages)
-router.get('/:id',isImageAuth, getImamgById)
-router.delete('/:id',isImageAuth, deleteImage)
+router.post('/',isAuthenticate, postImage)
+router.get('/',isAuthenticate, getAllImages)
+router.get('/:id',isAuthenticate, getImamgById)
+router.delete('/:id',isAuthenticate, deleteImage)
 
 export default router
