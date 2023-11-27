@@ -10,8 +10,7 @@ export const postImage = async (req, res) => {
     try {
         const myCloud = await cloudinary.uploader.upload(req.body.imageData, {
             folder: "sampleFolder",
-            width: 150,
-            crop: "scale",
+           
         });
 
 
