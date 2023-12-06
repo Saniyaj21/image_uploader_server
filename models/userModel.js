@@ -1,5 +1,7 @@
 import mongose from 'mongoose'
 import validator from 'validator';
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken';
 
 
 const userSchema = new mongose.Schema({
@@ -23,6 +25,12 @@ const userSchema = new mongose.Schema({
     resetPasswordExpaird:String
     
 })
+
+// Compare Password
+
+userSchema.methods.comparePassword = async function (password) {
+    return await bcrypt.compare(password, this.password); //entered password, hashed password
+  };
 
 export const User = mongose.model("Users", userSchema);
 

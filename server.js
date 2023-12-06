@@ -9,8 +9,8 @@ import cookieParser from 'cookie-parser';
 
 
 // routes import
-import ImageRouter from './routes/imageRoute.js';
-import Auth from './routes/auth.js'
+import imageRouter from './routes/imageRoute.js';
+import userRouter from './routes/userRoute.js'
 const server = express()
 
 // database connection 
@@ -29,7 +29,7 @@ server.use(express.json());
 server.use(fileUpload());
 server.use(
   cors({
-    origin: 'http://localhost:5173' || 'http://localhost:5174',
+    origin: 'http://localhost:5173',
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
@@ -44,8 +44,8 @@ server.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 server.use(cookieParser());
 
 // routes
-server.use('/auth', Auth)
-server.use('/api/images', ImageRouter)
+server.use('/api/user', userRouter)
+server.use('/api/images', imageRouter)
 
 server.listen(process.env.PORT, () => {
   console.log(`server is running at ${process.env.PORT}`)

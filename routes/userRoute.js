@@ -8,5 +8,5 @@ const router =express.Router();
 router.post('/register', newUser)
 router.post('/login', LoginUser)
 router.get('/logout',logOutUser)
-router.get('/user', isAuthenticate , userInfo)
+router.get('/profile', isAuthenticate , userInfo)
 export default router;
