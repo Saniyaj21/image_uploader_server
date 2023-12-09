@@ -1,12 +1,19 @@
 import { User } from '../models/userModel.js'
 import bcrypt from 'bcryptjs';
 import { sendCookie } from '../utils/sendCookie.js'
-
+import { v2 as cloudinary } from 'cloudinary';
 export const newUser = async (req, res) => {
 
   try {
 
     let { name, email, password } = req.body;
+
+    const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
+      folder: "sampleFolder",
+      width: 250,
+      crop: "scale",
+    });
+
     const user = await User.findOne({ email })
 
     if (user) return res.status(400).json({ success: false, message: 'user alrady exist...' });//if user exist , then return error
@@ -14,7 +21,15 @@ export const newUser = async (req, res) => {
     //password encription 
     const encriptedPassword = await bcrypt.hash(password, 10)
 
-    const data = await User.create({ name, email, password: encriptedPassword })
+    const data = await User.create({
+      name,
+      email,
+      password: encriptedPassword,
+      avatar: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url
+      }
+    })
     //return token using JWT
     sendCookie(data, res, 200);
   }
@@ -77,7 +92,6 @@ export const userInfo = async (req, res) => {
   try {
 
     const user = await User.findById(req.user._id)
-    console.log(user);
     res.status(200).json({ success: false, user });
   } catch (error) {
     res.status(401).json({ success: false, message: 'User not available' });

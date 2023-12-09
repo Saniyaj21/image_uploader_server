@@ -7,6 +7,13 @@ import fileUpload from 'express-fileupload';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
+import tinify from "tinify";
+
+// Set your API key
+tinify.key = process.env.TINIFY_KEY;
+tinify.proxy = "http://localhost:8080";
+
+
 
 // routes import
 import imageRouter from './routes/imageRoute.js';
