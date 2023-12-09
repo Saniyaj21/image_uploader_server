@@ -2,17 +2,17 @@
 import { Images } from '../models/imageModel.js';
 import { v2 as cloudinary } from 'cloudinary';
 
-
 // upload a image 
 export const postImage = async (req, res) => {
 
 
     try {
+
         const myCloud = await cloudinary.uploader.upload(req.body.imageData, {
             folder: "sampleFolder",
-           
-        });
 
+
+        });
 
         const image = await Images.create({
 
