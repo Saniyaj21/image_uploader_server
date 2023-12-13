@@ -7,12 +7,6 @@ import fileUpload from 'express-fileupload';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
-import tinify from "tinify";
-
-// Set your API key
-tinify.key = process.env.TINIFY_KEY;
-tinify.proxy = "http://localhost:8080";
-
 
 
 // routes import
@@ -32,7 +26,7 @@ cloudinary.config({
 
 
 // Using Middlewares
-server.use(express.json());
+server.use(express.json({ limit: '20mb' }));
 server.use(fileUpload());
 server.use(
   cors({
@@ -42,10 +36,10 @@ server.use(
   })
 );
 
-server.use(bodyParser.json({ limit: '50mb' }));
+server.use(bodyParser.json({ limit: '100mb' }));
 
 // Increase the request size limit for URL-encoded data
-server.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+server.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
 //use cookies parser ...
 server.use(cookieParser());

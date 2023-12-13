@@ -7,14 +7,14 @@ export const postImage = async (req, res) => {
 
 
     try {
-
+       
         const myCloud = await cloudinary.uploader.upload(req.body.imageData, {
             folder: "sampleFolder",
 
 
         });
 
-        const image = await Images.create({
+        await Images.create({
 
             public_id: myCloud.public_id,
             url: myCloud.secure_url,
@@ -22,7 +22,13 @@ export const postImage = async (req, res) => {
             user: req.user
 
         });
-        res.status(200).json({ success: true, message: 'Image uploaded successfully', image })
+        const allImages = await Images.find({ user: req.user });
+        res.status(200).
+            json({
+                success: true,
+                message: 'Image uploaded successfully',
+                allImages
+            })
     } catch (error) {
 
         res.status(400).json({
@@ -75,16 +81,16 @@ export const deleteImage = async (req, res) => {
         cloudinary.uploader.destroy(image.public_id, (error, result) => {
             if (error) {
                 console.error(error);
-            } else {
-                console.log("Ddeleted successfully");
             }
 
         });
 
         await Images.findByIdAndDelete(id)
+        const allImages = await Images.find({ user: req.user });
 
         res.status(200).json({
             success: true,
+            allImages,
             message: 'Image deleted succesfully'
         })
     }
