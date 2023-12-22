@@ -2,6 +2,8 @@ import { User } from '../models/userModel.js'
 import bcrypt from 'bcryptjs';
 import { sendCookie } from '../utils/sendCookie.js'
 import { v2 as cloudinary } from 'cloudinary';
+import { folderName } from '../utils/constants.js';
+
 export const newUser = async (req, res) => {
 
   try {
@@ -9,7 +11,7 @@ export const newUser = async (req, res) => {
     let { name, email, password } = req.body;
 
     const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
-      folder: "sampleFolder",
+      folder: folderName,
       width: 250,
       crop: "scale",
     });
