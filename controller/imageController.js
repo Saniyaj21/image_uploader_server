@@ -1,15 +1,16 @@
 // controllers here
 import { Images } from '../models/imageModel.js';
 import { v2 as cloudinary } from 'cloudinary';
+import { folderName } from '../utils/constants.js';
 
 // upload a image 
 export const postImage = async (req, res) => {
 
 
     try {
-       
+
         const myCloud = await cloudinary.uploader.upload(req.body.imageData, {
-            folder: "sampleFolder",
+            folder: folderName,
 
 
         });
@@ -76,16 +77,17 @@ export const deleteImage = async (req, res) => {
     try {
         const { id } = req.params
 
-        const image = await Images.findById(id)
 
-        cloudinary.uploader.destroy(image.public_id, (error, result) => {
+        const image = await Images.findOneAndDelete({ _id: id });
+
+        // Deleting Images From Cloudinary
+        await cloudinary.uploader.destroy(image.public_id, (error, result) => {
             if (error) {
                 console.error(error);
             }
 
         });
 
-        await Images.findByIdAndDelete(id)
         const allImages = await Images.find({ user: req.user });
 
         res.status(200).json({
