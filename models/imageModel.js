@@ -15,6 +15,10 @@ const imageSchema = new mongoose.Schema({
         max: 1000
 
     },
+    isPublic:{
+        type:Boolean,
+        default: false
+    },
 
     user: {
         type: mongoose.Schema.ObjectId,

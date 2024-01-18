@@ -100,6 +100,18 @@ export const userInfo = async (req, res) => {
   }
 }
 
+/************** user data ****************** */
+
+export const userProfileInfo = async (req, res) => {
+
+  try {
+    const user = await User.findById(req.params.id);
+    res.status(200).json({ success: false, user });
+  } catch (error) {
+    res.status(401).json({ success: false, message: 'User not available' });
+  }
+}
+
 
 /****************** log out ******************* */
 
