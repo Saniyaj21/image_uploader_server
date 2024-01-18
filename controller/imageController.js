@@ -20,6 +20,7 @@ export const postImage = async (req, res) => {
             public_id: myCloud.public_id,
             url: myCloud.secure_url,
             caption: req.body.caption,
+            isPublic: req.body.isPublic,
             user: req.user
 
         });
@@ -51,6 +52,25 @@ export const getAllImages = async (req, res) => {
         })
     }
 }
+// get all public images 
+export const getAllPublicImages = async (req, res) => {
+    try {
+
+        // Query for public images and populate the user field
+        const allImages = await Images.find({ isPublic: true })
+            .populate('user', '_id name avatar'); // Populate user with specified fields
+
+
+        res.status(200).json({ success: true, allImages });
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(400).json({
+            success: false,
+            message: "No Images Found!"
+        });
+    }
+};
+
 
 //get unique Image using image Id
 export const getImamgById = async (req, res) => {
