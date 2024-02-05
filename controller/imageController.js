@@ -124,3 +124,61 @@ export const deleteImage = async (req, res) => {
     }
 
 }
+
+// Like a picture by any user
+
+export const likeImage = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        await Images.findByIdAndUpdate(
+            id,
+            { $push: { likes: req.body.userId } },
+            { new: true }
+        );
+        const allImages = await Images.find({ isPublic: true })
+            .populate('user likes', '_id name avatar'); // Populate user with specified fields
+
+        res.status(200).json({
+            success: true,
+            allImages,
+            message: 'Image liked succesfully'
+        })
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).json({
+            success: false,
+            message: err.message
+        })
+    }
+
+}
+// Like a picture by any user
+
+export const unlikeImage = async (req, res) => {
+    try {
+        const { id } = req.params
+
+       await Images.findByIdAndUpdate(
+            id,
+            { $pull: { likes: req.body.userId } },
+            { new: true }
+        );
+        const allImages = await Images.find({ isPublic: true })
+            .populate('user likes', '_id name avatar'); // Populate user with specified fields
+
+        res.status(200).json({
+            success: true,
+            allImages,
+            message: 'Unliked succesfully'
+        })
+    }
+    catch (err) {
+        res.status(400).json({
+            success: false,
+            message: err.message
+        })
+    }
+
+}
