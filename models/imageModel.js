@@ -15,10 +15,14 @@ const imageSchema = new mongoose.Schema({
         max: 1000
 
     },
-    isPublic:{
-        type:Boolean,
+    isPublic: {
+        type: Boolean,
         default: false
     },
+    likes: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }],
 
     user: {
         type: mongoose.Schema.ObjectId,
