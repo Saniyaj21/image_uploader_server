@@ -47,6 +47,9 @@ server.use(cookieParser());
 // routes
 server.use('/api/user', userRouter)
 server.use('/api/images', imageRouter)
+server.get('/', function (req, res) {
+  res.send('Hello World!')
+})
 
 server.listen(process.env.PORT, () => {
   console.log(`server is running at ${process.env.PORT}`)
