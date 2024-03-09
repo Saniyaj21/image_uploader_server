@@ -95,7 +95,7 @@ export const userInfo = async (req, res) => {
   try {
 
     const user = await User.findById(req.user._id)
-    res.status(200).json({ success: false, user });
+    res.status(200).json({ success: true, user });
   } catch (error) {
     res.status(401).json({ success: false, message: 'User not available' });
   }
