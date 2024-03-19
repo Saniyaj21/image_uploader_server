@@ -1,6 +1,6 @@
 import { User } from '../models/userModel.js'
 import bcrypt from 'bcryptjs';
-import { sendCookie } from '../utils/sendCookie.js'
+import jwt from 'jsonwebtoken'
 import { v2 as cloudinary } from 'cloudinary';
 import { folderName } from '../utils/constants.js';
 import { sendEmail } from '../utils/sendEmail.js';
@@ -11,32 +11,45 @@ export const newUser = async (req, res) => {
 
     let { name, email, password } = req.body;
 
+
     const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
       folder: folderName,
       width: 250,
       crop: "scale",
     });
 
-    const user = await User.findOne({ email })
+    const user2 = await User.findOne({ email })
 
-    if (user) return res.status(400).json({ success: false, message: 'user alrady exist...' });//if user exist , then return error
+    if (user2) return res.status(400).json({ success: false, message: 'user alrady exist...' });//if user exist , then return error
 
-    //password encription 
-    const encriptedPassword = await bcrypt.hash(password, 10)
 
-    const data = await User.create({
+
+    const user = await User.create({
       name,
       email,
-      password: encriptedPassword,
+      password,
       avatar: {
         public_id: myCloud.public_id,
         url: myCloud.secure_url
       }
     })
-    //return token using JWT
-    sendCookie(data, res, 200);
+
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET,);
+
+    user.token = token;
+    user.save();
+
+
+
+    res.status(200).json({
+      success: true,
+      token,
+      user,
+    });
+
   }
   catch (err) {
+
     res.status(400).json({
       success: false,
       message: 'Can not Register !',
@@ -79,8 +92,17 @@ export const LoginUser = async (req, res) => {
         })
     }
 
-    // successful login
-    sendCookie(user, res, 200)
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET,);
+
+    user.token = token;
+    user.save();
+
+    res.status(200).json({
+      success: true,
+      token,
+      user
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Internal server error' });
@@ -118,19 +140,16 @@ export const userProfileInfo = async (req, res) => {
 
 export const logOutUser = async (req, res) => {
   try {
-    res
-      .status(200)
-      .cookie("token", null, {
-        expiresIn: new Date(
-          Date.now()
-        ),
-        httpOnly: true,
-        sameSite: "None",
-        secure: true
-      }).json({
-        success: true,
-        message: "user Logout successfully.."
-      })
+    const id = req.user._id
+    const user = await User.findById(id).select('+token');
+
+    user.token = undefined
+    user.save();
+    res.status(200).json({
+      success: true,
+      logOut: true,
+      token: null
+    });
 
   } catch (error) {
 
@@ -267,8 +286,18 @@ export const setNewPassword = async (req, res) => {
       // Clear the OTP and its expiration time
       user.resetPasswordOTP = undefined;
       user.resetPasswordOTPExpire = undefined;
-      await user.save();
-      sendCookie(user, res, 200);
+
+
+
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET,);
+
+      user.token = token;
+      user.save();
+      res.status(200).json({
+        success: true,
+        token,
+        user
+      });
     } else {
       return res.status(400).json({
         success: false,
@@ -277,7 +306,6 @@ export const setNewPassword = async (req, res) => {
     }
 
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       success: false,
       message: "Cant't verify your otp",

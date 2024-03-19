@@ -20,6 +20,10 @@ const userSchema = new mongose.Schema({
         required: true,
         minLength: [8, 'minimum 8 charecter required.']
     },
+    token: {
+        type: String,
+        select: false,
+    },
     avatar: {
         public_id: {
             type: String,
