@@ -7,7 +7,7 @@ const router =express.Router();
 
 router.post('/register', newUser)
 router.post('/login', LoginUser)
-router.get('/logout',logOutUser)
+router.get('/logout',isAuthenticate,logOutUser)
 router.post('/password/forgot',forgotPassword)
 router.post('/verify/otp',veryfyOTP)
 router.post('/password/reset',setNewPassword)
